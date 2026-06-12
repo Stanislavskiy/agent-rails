@@ -21,6 +21,7 @@ Read AGENTS.local.md
 - refactor/tests/CI: `context/principles/distilled/`
 - infra/devops: `context/architecture.md`
 - data-model/db: `context/domain.md` + `context/architecture.md`
+- architecture-decision: check `adr/INDEX.md` first, then create `adr/YYYYMMDD-[slug].md`
 - deep-context: `docs/` (source of truth — do not edit unless explicitly asked)
 - quick-question: this file only
 
@@ -32,23 +33,29 @@ These apply to every task without needing a trigger:
 
 ## Project Notes
 
-- Default branch: `develop`
-- This repository is very large; use targeted searches and glob patterns
+- Default branch: `[main | develop | master]`
+- [Any repo-wide notes agents should know — size, monorepo layout, known footguns]
 
 ## Repo Structure
 
 ```
 AGENTS.md                ← entry point (repo root, this file)
+AGENTS.local.md          ← project-level overrides (supplements this file)
 .agents/                 ← agent context root
   context/               ← context enrichment for task solving
     architecture.md      ← system design, services, data flow, infra
     domain.md            ← entities, business rules, glossary
-    principles/          ← development principles
+    principles/          ← agent-only development principles
+      workflow.md        ← agent workflow rules (example)
       distilled/         ← READ-ONLY · auto-generated from /docs
   adr/
+    INDEX.md             ← ADR index (check before design decisions)
     YYYYMMDD-[slug].md   ← ADRs (append-only)
   prompts/
     [task-slug].md       ← reusable task prompt templates
+.github/
+  workflows/
+    distill-principles.yml ← CI trigger for distillation pipeline
 docs/                    ← single source of truth (human/agent authored)
 src/                     ← application source (project-specific)
 ```
