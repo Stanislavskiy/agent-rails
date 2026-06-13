@@ -1,14 +1,15 @@
 # Local Agent Overrides — Example
-> Copy to AGENTS.local.md (gitignored). Use for personal context, experiments, or temporary constraints.
+> Copy to AGENTS.local.md (gitignored). Personal use only — not shared with the team.
+> For shared project context, use AGENTS.workspace.md instead.
 
 ## Active Sprint / Focus
-[Current sprint goal or active workstream — 1-2 sentences. Delete when not relevant.]
+[Current sprint goal or active workstream — 1-2 sentences. Remove when not relevant.]
 
-## Known Issues / Watch Areas
-- [e.g. legacy module X has no tests — avoid refactoring without explicit instruction]
+## Personal Focus
+[What you're currently working on — optional context for your own sessions.]
 
-## Temporary Constraints
-- [e.g. do not merge to main until feature Y ships — expires YYYY-MM-DD]
+## Local Experiments
+- [Things you're trying that aren't agreed conventions yet]
 
-## Team Preferences
-- [Conventions agreed by the team that override or extend principles/]
+## Temporary Notes
+- [Anything you want the agent to know just for this session or branch]

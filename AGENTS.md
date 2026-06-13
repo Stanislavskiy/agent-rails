@@ -2,9 +2,10 @@
 
 > Read this file first. Load additional context only as needed per the routing table below.
 
-## Local Overrides
+## Overrides
 
-Read AGENTS.local.md if it exists (gitignored — personal overrides, not shared)
+- Read AGENTS.workspace.md (project-specific rules — committed, shared)
+- Read AGENTS.local.md if it exists (gitignored — personal overrides, not shared)
 
 ## Project Identity
 
@@ -42,7 +43,8 @@ These apply to every task without needing a trigger:
 
 ```
 AGENTS.md                ← entry point (repo root, this file)
-AGENTS.local.md          ← local overrides · gitignored (personal/experimental)
+AGENTS.workspace.md        ← workspace rules · committed (sprint, constraints, team conventions)
+AGENTS.local.md          ← personal overrides · gitignored (local experiments)
 AGENTS.local.md.example  ← template for AGENTS.local.md
 .agents/                 ← agent context root
   context/               ← context enrichment for task solving

@@ -6,7 +6,7 @@ A minimal context layer that helps AI agents work consistently across your codeb
 
 ## Integrate
 
-1. Copy into your repo: `.agents/`, `.github/`, `AGENTS.md`, `AGENTS.local.md`, `.gitignore`
+1. Copy into your repo: `.agents/`, `.github/`, `AGENTS.md`, `AGENTS.workspace.md`, `AGENTS.local.md.example`, `.gitignore`
 2. Fill in the placeholders:
    - `AGENTS.md` — project name, stack, default branch
    - `.agents/context/architecture.md` — system topology, services, infra
@@ -43,9 +43,11 @@ Step 2: new session → loads only distilled principles + scratch artifact
 
 State passes between sessions via `.agents/scratch/` (gitignored). Every step has a Gate — do not proceed until it passes. Human gates require your explicit review before the next step starts.
 
-### Personal and temporary context
+### Workspace and personal context
 
-`AGENTS.local.md` is gitignored. Use it for personal overrides, experiments, or temporary constraints without affecting the shared repo. Copy from `AGENTS.local.md.example` to get started.
+`AGENTS.workspace.md` is committed — use it for sprint focus, known issues, temporary constraints, and workspace-specific conventions shared across the team.
+
+`AGENTS.local.md` is gitignored — use it for personal experiments or local overrides. Copy from `AGENTS.local.md.example` to get started.
 
 ---
 
@@ -56,6 +58,6 @@ State passes between sessions via `.agents/scratch/` (gitignored). Every step ha
 | Behavior or API changes | Update `docs/` — distillation runs automatically on push |
 | Team convention changes | Edit `.agents/context/principles/` directly |
 | Introducing a new pattern or library | Create an ADR from `.agents/adr/YYYYMMDD-template.md` |
-| Sprint or project context changes | Update `AGENTS.local.md` |
+| Workspace context changes | Update `AGENTS.workspace.md` |
 
 > `principles/distilled/` is read-only — never edit it manually. It is regenerated from `docs/` by the distillation pipeline.
