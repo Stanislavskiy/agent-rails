@@ -4,8 +4,9 @@
 
 ## Overrides
 
-- Read AGENTS.workspace.md (project-specific rules — committed, shared)
-- Read AGENTS.local.md if it exists (gitignored — personal overrides, not shared)
+Read these first, before starting any task:
+- AGENTS.workspace.md
+- AGENTS.local.md (if it exists)
 
 ## Project Identity
 
@@ -15,59 +16,43 @@
 - framework: [FRAMEWORK@VERSION]
 - infra: [cloud-provider] · [container/orchestration] · [db]
 
-## Context Routing — load ONLY what your task needs
+## Context Routing
 
-- multi-step task (feature | bug | refactor): check `routines/INDEX.md` for a matching workflow first
-- new-feature: `context/principles/distilled/` + `context/principles/` + `context/architecture.md` + `context/domain.md`
-- bug-fix: `context/principles/distilled/` + `context/architecture.md`
-- refactor/tests/CI: `context/principles/distilled/`
-- infra/devops: `context/architecture.md`
-- data-model/db: `context/domain.md` + `context/architecture.md`
-- architecture-decision: check `adr/INDEX.md` first, then create `adr/YYYYMMDD-[slug].md`
-- deep-context: `docs/` (source of truth — do not edit unless explicitly asked)
-- quick-question: this file only
+Load ONLY the files listed for your task type. Do not load others.
+
+- multi-step task (feature | bug | refactor): check `.agents/routines/INDEX.md` first
+- new-feature:           `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md` + `.agents/context/domain.md`
+- bug-fix:               `.agents/context/principles/distilled/` + `.agents/context/architecture.md`
+- refactor/tests/CI:     `.agents/context/principles/distilled/`
+- infra/devops:          `.agents/context/architecture.md`
+- data-model/db:         `.agents/context/domain.md` + `.agents/context/architecture.md`
+- architecture-decision: check `.agents/adr/INDEX.md` first, then create `.agents/adr/YYYYMMDD-[slug].md`
+- deep-context:          `docs/`
+- quick-question:        this file only
 
 ## Always-on rules
 
-These apply to every task without needing a trigger:
-
-- **Minimal fix** — apply the smallest change that solves the problem; do not expand scope across layers unless each layer is genuinely load-bearing
-- **Capture learnings** — when the developer corrects an approach or flags an important note mid-task, offer to capture it using `prompts/capture-learning.md` before continuing
+- MINIMAL FIX: Apply the smallest change that solves the problem. Do not expand scope across layers unless each layer is genuinely load-bearing.
+- CAPTURE LEARNINGS: When the developer corrects an approach or flags an important note mid-task, offer to capture it using `.agents/prompts/capture-learning.md` before continuing.
+- READ-ONLY DOCS: Never edit `docs/` unless the developer explicitly asks.
 
 ## Project Notes
 
 - Default branch: `[main | develop | master]`
 - [Any repo-wide notes agents should know — size, monorepo layout, known footguns]
 
-## Repo Structure
+## Key paths
 
-```
-AGENTS.md                ← entry point (repo root, this file)
-AGENTS.workspace.md        ← workspace rules · committed (sprint, constraints, team conventions)
-AGENTS.local.md          ← personal overrides · gitignored (local experiments)
-AGENTS.local.md.example  ← template for AGENTS.local.md
-.agents/                 ← agent context root
-  context/               ← context enrichment for task solving
-    architecture.md      ← system design, services, data flow, infra
-    domain.md            ← entities, business rules, glossary
-    principles/          ← agent-only development principles
-      workflow.md        ← agent workflow rules (example)
-      distilled/         ← READ-ONLY · auto-generated from /docs
-  adr/
-    INDEX.md             ← ADR index (check before design decisions)
-    YYYYMMDD-[slug].md   ← ADRs (append-only)
-  playbooks/
-    TEMPLATE.md          ← template for new playbooks
-    [playbook-slug].md   ← reusable sub-task procedures (referenced from prompts/routines)
-  prompts/
-    [task-slug].md       ← reusable task prompt templates
-  routines/
-    INDEX.md             ← routines index (check before multi-step work)
-    [routine-slug].md    ← multi-step multi-agent workflows
-  scratch/               ← gitignored · ephemeral inter-agent state
-.github/
-  workflows/
-    distill-principles.yml ← CI trigger for distillation pipeline
-docs/                    ← single source of truth (human/agent authored)
-src/                     ← application source (project-specific)
-```
+- `AGENTS.workspace.md` — committed project/team context
+- `AGENTS.local.md` — personal overrides (gitignored)
+- `.agents/context/architecture.md` — system design, services, data flow, infra
+- `.agents/context/domain.md` — entities, business rules, glossary
+- `.agents/context/principles/` — agent development rules
+- `.agents/context/principles/distilled/` — READ-ONLY · auto-generated from `docs/`
+- `.agents/adr/INDEX.md` — architecture decision index
+- `.agents/adr/YYYYMMDD-[slug].md` — individual ADRs (append-only)
+- `.agents/playbooks/` — sub-task procedures (referenced from routines/prompts)
+- `.agents/prompts/` — task prompt templates
+- `.agents/routines/INDEX.md` — multi-step workflow index
+- `.agents/scratch/` — ephemeral inter-agent state (gitignored)
+- `docs/` — source of truth (human/agent authored)
