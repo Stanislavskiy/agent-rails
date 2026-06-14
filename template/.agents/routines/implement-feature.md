@@ -12,8 +12,9 @@
 ---
 
 ## Step 1 — Plan · think
-Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md` + `.agents/context/domain.md`
+Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md` + `.agents/context/domain.md` + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md` + `.agents/memory/INDEX-integration.md`
 Actions:
+- Load relevant memory entries for the feature scope before designing
 - Design implementation approach
 - List files to create/modify and why
 - Identify patterns to follow and risks
@@ -62,3 +63,12 @@ Actions:
 - If docs changed: trigger distillation pipeline
 Gate: docs accurately reflect new behavior
 On failure: escalate — ambiguous doc/code relationship requires human decision
+
+---
+
+## Step 6 — Capture Memory · act  (conditional — skip if no new learning)
+Reads: `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md` + `.agents/memory/INDEX-integration.md`
+Actions:
+- Identify any pattern, gotcha, or resolution from this task not already in the index
+- Follow `.agents/playbooks/memory-write.md` for each candidate
+Gate: all new learnings captured or determined not memory-worthy

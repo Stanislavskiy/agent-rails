@@ -10,8 +10,9 @@
 ---
 
 ## Step 1 — Scope · think
-Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md`
+Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md` + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md`
 Actions:
+- Load constraint and pattern entries relevant to the target module
 - List files to change and why
 - Identify patterns to apply and risks
 - Flag any protected paths that will be touched
@@ -52,3 +53,12 @@ Actions:
 - DO NOT change test intent — a test that now fails because behavior changed is a bug, not a test to delete
 Gate: full test suite passes
 On failure: loop-back to Step 2 — a test failure likely indicates an unintended behavior change
+
+---
+
+## Step 5 — Capture Memory · act  (conditional — skip if no new learning)
+Reads: `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md`
+Actions:
+- Identify any pattern or constraint from this task not already in the index
+- Follow `.agents/playbooks/memory-write.md` for each candidate
+Gate: all new learnings captured or determined not memory-worthy

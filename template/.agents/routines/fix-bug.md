@@ -15,8 +15,9 @@
 ---
 
 ## Step 1 — Investigate · think
-Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/architecture.md`
+Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/architecture.md` + `.agents/memory/INDEX-gotcha.md` + `.agents/memory/INDEX-resolution.md` + `.agents/memory/INDEX-constraint.md`
 Actions:
+- Check memory for prior resolutions matching this symptom before investigating
 - Trace execution path to identify root cause
 - Document hypothesis — where, why, and how the bug occurs
 - Do NOT write any code
@@ -54,3 +55,12 @@ Actions:
 Produces: `.agents/scratch/fix-bug-review.md`
 Gate: no critical or high findings; no protected paths touched
 On failure: escalate — unintended side-effects require human review
+
+---
+
+## Step 5 — Capture Memory · act  (conditional — skip if no new learning)
+Reads: `.agents/memory/INDEX-gotcha.md` + `.agents/memory/INDEX-resolution.md` + `.agents/memory/INDEX-constraint.md`
+Actions:
+- Identify any gotcha, resolution, or constraint from this task not already in the index
+- Follow `.agents/playbooks/memory-write.md` for each candidate
+Gate: all new learnings captured or determined not memory-worthy

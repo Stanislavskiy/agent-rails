@@ -15,6 +15,7 @@ The `.agents/` folder has five distinct layers, each with a different role:
 | Layer | Answers | Written by |
 |-------|---------|------------|
 | `context/` | What to *know* — architecture, domain, development rules | Developers |
+| `memory/` | What was *discovered* — agent-learned patterns, gotchas, resolutions | Agents (via playbook) |
 | `playbooks/` | How to *do X* — project-specific sub-task procedures | Developers |
 | `prompts/` | What *task* to run — standalone single-session templates | Developers |
 | `routines/` | How to *orchestrate* — multi-session workflows with gates | Developers |
@@ -121,6 +122,7 @@ State passes between sessions via `.agents/scratch/` (gitignored). Every step ha
 | Team convention changes | Edit `.agents/context/principles/` directly |
 | Recurring sub-task with project-specific steps | Add a playbook from `.agents/playbooks/TEMPLATE.md` |
 | Introducing a new pattern or library | Create an ADR from `.agents/adr/YYYYMMDD-template.md` |
+| Agent discovers a pattern, gotcha, or resolution | Follow `.agents/playbooks/memory-write.md` to add or update a memory entry |
 | Workspace context changes | Update `AGENTS.workspace.md` |
 
 > `principles/distilled/` is read-only — never edit it manually. It is regenerated from `docs/` by the distillation pipeline.

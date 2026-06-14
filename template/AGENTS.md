@@ -21,9 +21,9 @@ Read these first, before starting any task:
 Load ONLY the files listed for your task type. Do not load others.
 
 - multi-step task (feature | bug | refactor): check `.agents/routines/INDEX.md` first
-- new-feature:           `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md` + `.agents/context/domain.md`
-- bug-fix:               `.agents/context/principles/distilled/` + `.agents/context/architecture.md`
-- refactor/tests/CI:     `.agents/context/principles/distilled/`
+- new-feature:           `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md` + `.agents/context/domain.md` + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md` + `.agents/memory/INDEX-integration.md`
+- bug-fix:               `.agents/context/principles/distilled/` + `.agents/context/architecture.md` + `.agents/memory/INDEX-gotcha.md` + `.agents/memory/INDEX-resolution.md` + `.agents/memory/INDEX-constraint.md`
+- refactor/tests/CI:     `.agents/context/principles/distilled/` + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md`
 - infra/devops:          `.agents/context/architecture.md`
 - data-model/db:         `.agents/context/domain.md` + `.agents/context/architecture.md`
 - architecture-decision: check `.agents/adr/INDEX.md` first, then create `.agents/adr/YYYYMMDD-[slug].md`
@@ -35,6 +35,8 @@ Load ONLY the files listed for your task type. Do not load others.
 - MINIMAL FIX: Apply the smallest change that solves the problem. Do not expand scope across layers unless each layer is genuinely load-bearing.
 - CAPTURE LEARNINGS: When the developer corrects an approach or flags an important note mid-task, offer to capture it using `.agents/prompts/capture-learning.md` before continuing.
 - READ-ONLY DOCS: Never edit `docs/` unless the developer explicitly asks.
+- CONSULT MEMORY: Load the memory index slices specified in the routing table for your task type. Pull individual entries by slug path when the one-liner matches your task scope.
+- CAPTURE TO MEMORY: After any task that produced a new pattern, gotcha, or resolution, follow `.agents/playbooks/memory-write.md` to persist it.
 
 ## Project Notes
 
@@ -51,6 +53,13 @@ Load ONLY the files listed for your task type. Do not load others.
 - `.agents/context/principles/distilled/` — READ-ONLY · auto-generated from `docs/`
 - `.agents/adr/INDEX.md` — architecture decision index
 - `.agents/adr/YYYYMMDD-[slug].md` — individual ADRs (append-only)
+- `.agents/memory/INDEX-gotcha.md` — unexpected behaviors, footguns (bug-fix tasks)
+- `.agents/memory/INDEX-pattern.md` — reusable approaches that work well here (feature/refactor tasks)
+- `.agents/memory/INDEX-resolution.md` — how recurring problems were solved (bug-fix tasks)
+- `.agents/memory/INDEX-constraint.md` — external limits, system-imposed restrictions (all tasks)
+- `.agents/memory/INDEX-integration.md` — third-party service behaviors (feature tasks)
+- `.agents/memory/entries/[slug].md` — individual entries (load on demand by slug)
+- `.agents/playbooks/memory-write.md` — write protocol (always follow before writing to memory)
 - `.agents/playbooks/` — sub-task procedures (referenced from routines/prompts)
 - `.agents/prompts/` — task prompt templates
 - `.agents/routines/INDEX.md` — multi-step workflow index
