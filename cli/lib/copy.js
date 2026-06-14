@@ -85,6 +85,10 @@ export function copyIfAbsent(src, dest) {
   return true;
 }
 
+export function copyAddonFiles(sourceRoot, targetDir) {
+  cpSync(sourceRoot, targetDir, { recursive: true });
+}
+
 export function isBinary(buffer) {
   const check = buffer.subarray(0, 8192);
   for (let i = 0; i < check.length; i++) {

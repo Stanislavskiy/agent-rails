@@ -6,6 +6,7 @@ import { confirm, select } from '@inquirer/prompts';
 import { walk } from './lib/walk.js';
 import {
   backupAgentsDir,
+  copyAddonFiles,
   copyIfAbsent,
   copyTemplateFiles,
   isBinary,
@@ -18,6 +19,7 @@ import { promptForValues } from './lib/prompts.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_ROOT = resolve(__dirname, '../template');
+const MEMORY_ROOT = resolve(__dirname, '../memory');
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -94,6 +96,15 @@ async function main() {
     skipped.push('AGENTS.workspace.md');
   }
 
+  // --- optional memory addon ---
+  const includeMemory = await confirm({
+    message: 'Include agent memory layer? (self-hosted mem0 — requires Docker)',
+    default: false,
+  });
+  if (includeMemory) {
+    copyAddonFiles(MEMORY_ROOT, targetDir);
+  }
+
   // --- placeholder substitution ---
   console.log('\nFill in project identity (used in AGENTS.md):\n');
   const values = await promptForValues(PLACEHOLDERS);
@@ -128,7 +139,12 @@ async function main() {
   console.log('\nNext steps:');
   console.log('  1. Review AGENTS.md and fill in the remaining [bracketed] sections');
   console.log('  2. Fill in .agents/context/architecture.md and .agents/context/domain.md');
-  console.log('  3. Commit the .agents/ directory to your repo\n');
+  console.log('  3. Commit the .agents/ directory to your repo');
+  if (includeMemory) {
+    console.log('\n  Memory layer included:');
+    console.log('  4. Follow the Memory section in the template README to start the local stack');
+  }
+  console.log();
 }
 
 main().catch((err) => {

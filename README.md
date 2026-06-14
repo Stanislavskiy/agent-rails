@@ -19,6 +19,7 @@ The `.agents/` folder has five distinct layers, each with a different role:
 | `prompts/` | What *task* to run — standalone single-session templates | Developers |
 | `routines/` | How to *orchestrate* — multi-session workflows with gates | Developers |
 | `adr/` | What was *decided* — append-only architecture record | Developers + agents |
+| `memory/` | What was *discovered* — agent-learned patterns, gotchas, resolutions | Agents (via playbook) |
 
 ### Principles and distillation
 
@@ -75,6 +76,93 @@ After init:
 - Add project docs to `docs/` — the pipeline populates `principles/distilled/` on every push
 
 > If you prefer manual setup: copy everything inside `template/` into your repo root and fill in the `[bracketed]` placeholders by hand.
+
+---
+
+## Memory
+
+The memory layer lets agents persist what they discover across sessions — patterns, gotchas, and resolutions that would otherwise be lost. It is opt-in: the CLI prompt during `init` asks whether to include it.
+
+When included, the stack runs entirely on your machine. No data is sent to any external service.
+
+### Infrastructure
+
+Three components, all local:
+
+| Component | Role | Image |
+|---|---|---|
+| Qdrant | Vector store | `qdrant/qdrant` |
+| Ollama | Embeddings + LLM | `ollama/ollama` |
+| mem0 MCP | Agent interface | `npx @mem0ai/mem0-mcp` |
+
+### Setup
+
+**1. Start the infrastructure**
+
+```sh
+docker compose -f docker-compose.mem0.yml up -d
+```
+
+**2. Pull the required models** (one-time, ~5 GB total)
+
+```sh
+docker exec ollama ollama pull nomic-embed-text   # embeddings
+docker exec ollama ollama pull llama3.1:8b        # memory extraction LLM
+```
+
+**3. Add the mem0 MCP server to your agent config**
+
+For Claude Code (`~/.claude/settings.json`) or Cursor (`.cursor/mcp.json`):
+
+```json
+{
+  "mcpServers": {
+    "mem0": {
+      "command": "npx",
+      "args": ["@mem0ai/mem0-mcp"],
+      "env": {
+        "MEM0_USER_ID": "your-project-name",
+        "QDRANT_URL": "http://localhost:6333",
+        "OLLAMA_BASE_URL": "http://localhost:11434",
+        "EMBEDDING_MODEL": "nomic-embed-text",
+        "LLM_MODEL": "llama3.1:8b"
+      }
+    }
+  }
+}
+```
+
+Replace `your-project-name` with your project name — this scopes all memories to the project.
+
+**4. Verify**
+
+```sh
+curl http://localhost:6333/healthz        # Qdrant
+curl http://localhost:11434/api/tags      # Ollama — lists pulled models
+```
+
+Once running, your agent will have `add_memory` and `search_memory` tools available. The `AGENTS.md` routing table and routines reference these automatically — no further configuration needed.
+
+### How agents use memory
+
+Agents consult and write memory automatically as part of their routines:
+
+- **Before investigating a bug** — queries for prior resolutions and known gotchas
+- **Before designing a feature** — queries for relevant patterns and constraints
+- **After completing a task** — captures any new learning via `.agents/playbooks/memory-write.md`
+
+To capture a learning manually mid-task, use `.agents/prompts/capture-learning.md` — it routes to memory when the note is scoped to specific conditions rather than a universal rule.
+
+### Sharing memory across the team
+
+Memory is stored in the local Qdrant instance. To share state across developers, point all team members' `QDRANT_URL` at a shared Qdrant server on your internal network. Ollama continues to run locally on each machine — only the vector store is shared.
+
+```sh
+# On the shared server
+docker run -d -p 6333:6333 -v qdrant_data:/qdrant/storage qdrant/qdrant
+```
+
+Each dev's MCP config: `"QDRANT_URL": "http://your-internal-server:6333"`
 
 ---
 
