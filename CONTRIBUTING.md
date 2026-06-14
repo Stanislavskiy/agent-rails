@@ -1,4 +1,4 @@
-# Contributing to Agent Repo Template
+# Contributing to Agent Rails
 
 This document is for developers/agents maintaining the template itself.
 
