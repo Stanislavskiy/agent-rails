@@ -19,20 +19,20 @@ step identifies a new pattern, gotcha, or resolution worth persisting across ses
 
 3. **Exact slug scan** — grep `.agents/memory/INDEX-[category].md` slug column for the candidate slug. If found → go to step 5 (UPDATE).
 
-4. **Semantic scan** — read every one-liner in the category index. If any describes the same concept (same system + same behavior + same scope) → go to step 5 using that entry's slug. If no match → go to step 6 (CREATE).
+4. **Semantic scan** — read every `summary` in the category index. If any describes the same concept (same system + same behavior + same scope) → go to step 5 using that entry's slug. If no match → go to step 6 (CREATE).
 
 5. **UPDATE path:**
    - Additive observation → append bullet to `## What we know`, bump `updated` date
    - Contradicting observation → append bullet prefixed `[YYYY-MM-DD]`, set `Conflicts with: self`, set `confidence: observed`
    - Confirming observation → promote `confidence: confirmed` **only if** `Conflicts with: n/a`
-   - Update the matching row in `INDEX-[category].md` (updated date + confidence)
+   - Update the matching pipe-delimited line in `INDEX-[category].md` (updated date + confidence fields)
 
 6. **CREATE path** (only if steps 3 and 4 both found nothing):
    - Copy `.agents/memory/TEMPLATE.md` to `.agents/memory/entries/[slug].md`
    - Fill all fields — use `n/a` where not applicable, never leave a field blank
-   - Append a new row to `.agents/memory/INDEX-[category].md`
+   - Append a pipe-delimited line to `.agents/memory/INDEX-[category].md`: `[slug] | [summary] | YYYY-MM-DD | observed`
 
-7. **Cross-conflict scan** — compare the new/updated one-liner against one-liners in all five category indices. If any other entry describes the same concept, set `Conflicts with: [other-slug]` in both entry files.
+7. **Cross-conflict scan** — compare the new/updated `summary` against summaries in all five category indices. If any other entry describes the same concept, set `Conflicts with: [other-slug]` in both entry files.
 
 ## Output
 Confirm: slug written or updated, which index file was updated, confidence level, any conflicts flagged.

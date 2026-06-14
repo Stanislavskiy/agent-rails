@@ -1,7 +1,7 @@
 # Memory Index — Pattern
-> Reusable approaches that work well in this codebase.
-> To read an entry: load `.agents/memory/entries/[slug].md`.
-> To write: follow `.agents/playbooks/memory-write.md` — DO NOT write directly.
+> category: pattern
+> read: load `.agents/memory/entries/[slug].md`
+> write: follow `.agents/playbooks/memory-write.md` — DO NOT write directly
+> confidence-values: observed | confirmed | deprecated
+> fields: slug | summary | updated | confidence
 
-| slug | one-liner | updated | confidence |
-|------|-----------|---------|------------|
