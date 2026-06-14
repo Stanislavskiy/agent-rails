@@ -1,8 +1,5 @@
-# Agent scratch space (ephemeral inter-agent state)
-.agents/scratch/
+node_modules
 
-# Local agent overrides (personal/experimental — not shared)
-AGENTS.local.md
 
 # OS
 .DS_Store

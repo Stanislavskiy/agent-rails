@@ -1,0 +1,15 @@
+{
+  "name": "agent-init",
+  "version": "1.0.0",
+  "description": "Initialize a project from agent-repo-template",
+  "type": "module",
+  "bin": {
+    "agent-init": "./init.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^8"
+  }
+}

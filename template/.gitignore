@@ -1,0 +1,5 @@
+# Agent scratch space (ephemeral inter-agent state)
+.agents/scratch/
+
+# Local agent overrides (personal/experimental — not shared)
+AGENTS.local.md

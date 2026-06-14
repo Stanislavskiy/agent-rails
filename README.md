@@ -50,13 +50,31 @@ Prose playbooks work well for interactive agent use. For automated pipelines the
 
 ## Integrate
 
-1. Copy into your repo: `.agents/`, `.github/`, `AGENTS.md`, `AGENTS.workspace.md`, `AGENTS.local.md.example`, `.gitignore`
-2. Fill in the placeholders:
-   - `AGENTS.md` — project name, stack, default branch
-   - `.agents/context/architecture.md` — system topology, services, infra
-   - `.agents/context/domain.md` — core entities, business rules, glossary
-3. Wire up `.github/workflows/distill-principles.yml` with your agent runner (see the TODO comment inside)
-4. Add project docs to `docs/` — the pipeline populates `principles/distilled/` on every push
+1. Install dependencies:
+
+```sh
+cd cli && npm install
+```
+
+2. Run the CLI from the repo root:
+
+```sh
+node cli/init.js <path/to/your-project>
+```
+
+The CLI will:
+1. Copy all template files from `template/` into your project
+2. Walk you through filling in the identity placeholders in `AGENTS.md` (project name, stack, default branch)
+3. Merge the agent `.gitignore` entries into your existing `.gitignore` without duplicates
+4. Handle conflicts if `.agents/` already exists — backup or merge
+
+After init:
+- Fill in `.agents/context/architecture.md` — system topology, services, infra
+- Fill in `.agents/context/domain.md` — core entities, business rules, glossary
+- Wire up `.github/workflows/distill-principles.yml` with your agent runner (see the TODO comment inside)
+- Add project docs to `docs/` — the pipeline populates `principles/distilled/` on every push
+
+> If you prefer manual setup: copy everything inside `template/` into your repo root and fill in the `[bracketed]` placeholders by hand.
 
 ---
 
