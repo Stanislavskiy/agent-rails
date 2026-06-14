@@ -1,4 +1,4 @@
-# Agent Repo Template
+# Agent Rails
 
 A minimal context layer that helps AI agents work consistently across your codebase — regardless of which agent tool you use.
 
