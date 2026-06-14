@@ -1,0 +1,34 @@
+{
+  "id": "refactor-extract-service",
+  "type": "refactor",
+  "fixture": "simple-api",
+  "description": "The business logic in src/routes/users.js is inline in the route handlers (direct db access, validation logic). Extract it into a src/services/users.js service module. The route handlers should delegate to the service. Behavior must not change.",
+  "expected_behavior": "A new src/services/users.js exists with functions findAll(), findById(id), create({ name, email }). Route handlers call these functions. All existing tests still pass.",
+  "target_files": ["src/routes/users.js"],
+  "success_criteria": [
+    {
+      "id": "service-file-mentioned",
+      "description": "Output references a new src/services/users.js file",
+      "type": "contains",
+      "match": "services/users"
+    },
+    {
+      "id": "route-delegates",
+      "description": "Refactored route handler imports from the service module",
+      "type": "contains",
+      "match": "import"
+    },
+    {
+      "id": "no-behavior-change",
+      "description": "Refactor preserves all observable behavior",
+      "type": "rubric",
+      "rubric": "Does the refactored code preserve the exact same HTTP behavior (same status codes, same response shapes, same validation rules) without any behavior changes?"
+    },
+    {
+      "id": "service-has-functions",
+      "description": "Service module contains named functions for each operation",
+      "type": "rubric",
+      "rubric": "Does the proposed service module expose clearly named functions (findAll, findById, create or equivalent) that encapsulate the business logic?"
+    }
+  ]
+}

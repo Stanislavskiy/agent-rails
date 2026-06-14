@@ -1,0 +1,28 @@
+{
+  "id": "fix-bug-whitespace-name",
+  "type": "bug-fix",
+  "fixture": "buggy-api",
+  "description": "POST /users accepts whitespace-only names such as {\"name\": \"   \", \"email\": \"x@example.com\"} and stores them. The name field passes the !name check because a non-empty string is truthy. Fix it.",
+  "expected_behavior": "Returns HTTP 400 when name is empty after trimming whitespace. Valid names are still accepted.",
+  "target_files": ["src/routes/users.js"],
+  "success_criteria": [
+    {
+      "id": "trim-check",
+      "description": "Fix trims the name before checking emptiness",
+      "type": "contains",
+      "match": "trim"
+    },
+    {
+      "id": "returns-400",
+      "description": "Fix returns 400 for whitespace-only name",
+      "type": "contains",
+      "match": "400"
+    },
+    {
+      "id": "stores-trimmed",
+      "description": "Fix stores the trimmed name, not the raw input",
+      "type": "rubric",
+      "rubric": "Does the fix both validate the trimmed name AND store the trimmed value (not the raw input with surrounding spaces)?"
+    }
+  ]
+}

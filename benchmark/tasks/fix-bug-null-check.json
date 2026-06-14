@@ -1,0 +1,28 @@
+{
+  "id": "fix-bug-null-check",
+  "type": "bug-fix",
+  "fixture": "buggy-api",
+  "description": "GET /users/:id crashes with TypeError: Cannot read properties of undefined (reading 'name') when the requested user ID does not exist in the database. Fix it.",
+  "expected_behavior": "Returns HTTP 404 with body {\"error\": \"Not found\"} when the user ID does not exist. No crash.",
+  "target_files": ["src/routes/users.js"],
+  "success_criteria": [
+    {
+      "id": "returns-404",
+      "description": "Fix produces a 404 response for unknown IDs",
+      "type": "contains",
+      "match": "404"
+    },
+    {
+      "id": "no-crash-pattern",
+      "description": "Fix handles the null/undefined case before accessing a property",
+      "type": "contains",
+      "match": "!user"
+    },
+    {
+      "id": "minimal-change",
+      "description": "The fix touches only the null guard — does not refactor other logic",
+      "type": "rubric",
+      "rubric": "Does the proposed fix add only a null check (or equivalent early return) without restructuring other parts of the route handler or adding unrelated changes?"
+    }
+  ]
+}

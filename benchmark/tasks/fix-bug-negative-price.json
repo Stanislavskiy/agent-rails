@@ -1,0 +1,28 @@
+{
+  "id": "fix-bug-negative-price",
+  "type": "bug-fix",
+  "fixture": "buggy-api",
+  "description": "POST /products accepts a negative price (e.g. {\"name\": \"Widget\", \"price\": -5}) and creates a product with a negative price. Fix it so that negative and zero prices are rejected.",
+  "expected_behavior": "Returns HTTP 400 with body {\"error\": \"...\"} when price is <= 0. Positive prices still create the product with 201.",
+  "target_files": ["src/routes/products.js"],
+  "success_criteria": [
+    {
+      "id": "rejects-negative",
+      "description": "Fix includes a check for price <= 0",
+      "type": "contains",
+      "match": "price <= 0"
+    },
+    {
+      "id": "returns-400",
+      "description": "Fix returns 400 for invalid price",
+      "type": "contains",
+      "match": "400"
+    },
+    {
+      "id": "minimal-change",
+      "description": "Fix only adds the missing price guard, no other changes",
+      "type": "rubric",
+      "rubric": "Does the fix add only the missing price > 0 validation without changing other logic in the route handler?"
+    }
+  ]
+}

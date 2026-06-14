@@ -92,6 +92,48 @@ When a base `template/` file changes, check whether any patch in a plugin's `man
 
 ---
 
+## Benchmark
+
+`benchmark/` measures agent task completion, token consumption, and context window utilization against real API calls.
+
+### Running
+
+```sh
+cd benchmark && npm install
+ANTHROPIC_API_KEY=... node run.js --task fix-bug-null-check
+ANTHROPIC_API_KEY=... node run.js --all --report
+ANTHROPIC_API_KEY=... node run.js --type bug-fix --runs 5
+```
+
+### Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--task <id>` | — | Run one task by ID |
+| `--type <type>` | — | Run all tasks of a task type |
+| `--all` | — | Run all 7 tasks |
+| `--report` | false | Print summary table after `--all`; also measures routing efficiency |
+| `--baseline` | false | Load full context (ignores routing) — used to measure routing savings |
+| `--model <model>` | `claude-sonnet-4-6` | Override model |
+| `--runs <n>` | `3` | Runs per task; results reported as mean ± stddev |
+
+Results are written to `benchmark/results/` (gitignored).
+
+### Adding a task
+
+1. Create `benchmark/tasks/<id>.json` with: `id`, `type`, `fixture`, `description`, `expected_behavior`, `target_files`, `success_criteria`
+2. Criterion types: `contains` (string match), `not_contains`, `rubric` (LLM-graded 0–2)
+3. Use `buggy-api` fixture for bug-fix tasks; `simple-api` for feature/refactor/review
+
+### Adding a fixture
+
+Fixtures are pre-initialized projects in `benchmark/fixtures/<name>/`. They must include:
+- `AGENTS.md` (filled in with real project identity — no `[PLACEHOLDER]` values)
+- `.agents/context/architecture.md`, `domain.md`, `principles/distilled/README.md`
+- Source files that tasks can target
+
+---
+
 ## Testing a change
 
 There is no automated test suite for agent behavior. Validate manually:

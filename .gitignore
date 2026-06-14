@@ -1,5 +1,8 @@
 node_modules
 
+# Benchmark results
+benchmark/results/*.json
+
 
 # OS
 .DS_Store

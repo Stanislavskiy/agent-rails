@@ -1,0 +1,34 @@
+{
+  "id": "implement-feature-pagination",
+  "type": "new-feature",
+  "fixture": "simple-api",
+  "description": "Add pagination to GET /users. The endpoint should accept optional query parameters ?page= (1-based, default 1) and ?limit= (default 20, max 100). The response should return { data: [...], total: N, page: N, limit: N }.",
+  "expected_behavior": "GET /users?page=2&limit=1 returns the second user with pagination metadata. GET /users (no params) still works with defaults.",
+  "target_files": ["src/routes/users.js"],
+  "success_criteria": [
+    {
+      "id": "reads-query-params",
+      "description": "Implementation reads page and limit from req.query",
+      "type": "contains",
+      "match": "req.query"
+    },
+    {
+      "id": "returns-metadata",
+      "description": "Response includes total count alongside data",
+      "type": "contains",
+      "match": "total"
+    },
+    {
+      "id": "slice-logic",
+      "description": "Implementation slices the array correctly using page and limit",
+      "type": "contains",
+      "match": "slice"
+    },
+    {
+      "id": "default-values",
+      "description": "Page and limit have sensible defaults when not provided",
+      "type": "rubric",
+      "rubric": "Does the implementation provide default values for page (1) and limit (20) when the query parameters are absent? Are invalid values (e.g. page=0, limit=200) handled gracefully?"
+    }
+  ]
+}

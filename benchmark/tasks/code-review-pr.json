@@ -1,0 +1,35 @@
+{
+  "id": "code-review-pr",
+  "type": "code-review",
+  "fixture": "simple-api",
+  "description": "Review the following diff. It adds a PATCH /users/:id endpoint. Find all issues.",
+  "expected_behavior": "Review identifies at least: (1) missing authentication check comment — the endpoint allows any caller to change any user's email, (2) the update does not validate email format, (3) the success response uses res.json(user) after mutation, which is correct — this is NOT an issue.",
+  "target_files": [],
+  "diff": "diff --git a/src/routes/users.js b/src/routes/users.js\nindex abc1234..def5678 100644\n--- a/src/routes/users.js\n+++ b/src/routes/users.js\n@@ -14,6 +14,16 @@ router.get('/:id', (req, res) => {\n   res.json(user);\n });\n \n+router.patch('/:id', (req, res) => {\n+  const user = db.users.find((u) => u.id === parseInt(req.params.id, 10));\n+  if (!user) return res.status(404).json({ error: 'Not found' });\n+  const { email } = req.body;\n+  if (email !== undefined) {\n+    user.email = email;\n+  }\n+  res.json(user);\n+});\n+\n router.post('/', (req, res) => {",
+  "success_criteria": [
+    {
+      "id": "flags-no-auth",
+      "description": "Review flags that any caller can update any user's email (no auth/ownership check)",
+      "type": "rubric",
+      "rubric": "Does the review identify the missing authorization check — that the endpoint allows any unauthenticated caller to modify any user's email address?"
+    },
+    {
+      "id": "flags-no-email-validation",
+      "description": "Review flags that email is not validated for format",
+      "type": "rubric",
+      "rubric": "Does the review note that the email field is accepted without any format validation (e.g. no @ check, no regex), allowing arbitrary strings to be stored?"
+    },
+    {
+      "id": "correct-verdict",
+      "description": "Review produces a verdict (approved or changes-requested)",
+      "type": "contains",
+      "match": "changes-requested"
+    },
+    {
+      "id": "severity-assigned",
+      "description": "Review assigns severity to each finding",
+      "type": "rubric",
+      "rubric": "Does each finding in the review include a severity label (critical, high, medium, or low)?"
+    }
+  ]
+}

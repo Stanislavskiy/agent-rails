@@ -1,0 +1,14 @@
+{
+  "name": "agent-rails-benchmark",
+  "version": "1.0.0",
+  "description": "Benchmark suite for agent-repo-template: task completion, token usage, context window utilization",
+  "type": "module",
+  "scripts": {
+    "bench": "node run.js",
+    "bench:all": "node run.js --all --report"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.55.0",
+    "commander": "^13.1.0"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "implement-feature-soft-delete",
+  "type": "new-feature",
+  "fixture": "simple-api",
+  "description": "Add DELETE /users/:id that soft-deletes a user by setting a deletedAt timestamp on the record (do not remove from the array). After deletion, GET /users should exclude soft-deleted records, and GET /users/:id should return 404 for deleted users.",
+  "expected_behavior": "DELETE /users/1 sets db.users[0].deletedAt = new Date(). GET /users excludes it. GET /users/1 returns 404.",
+  "target_files": ["src/routes/users.js", "src/db.js"],
+  "success_criteria": [
+    {
+      "id": "delete-route",
+      "description": "Implements a DELETE /:id route handler",
+      "type": "contains",
+      "match": "router.delete"
+    },
+    {
+      "id": "sets-deleted-at",
+      "description": "Sets a deletedAt field rather than removing from the array",
+      "type": "contains",
+      "match": "deletedAt"
+    },
+    {
+      "id": "filters-list",
+      "description": "GET /users filters out soft-deleted records",
+      "type": "rubric",
+      "rubric": "Does the GET /users handler filter out records where deletedAt is set? Is the filter applied before returning the list?"
+    },
+    {
+      "id": "404-on-deleted",
+      "description": "GET /users/:id returns 404 for soft-deleted records",
+      "type": "rubric",
+      "rubric": "Does the GET /users/:id handler treat a record with deletedAt set the same as a missing record (404 response)?"
+    }
+  ]
+}
