@@ -14,6 +14,7 @@ import {
   mergeGitignore,
   replaceAgentsDir,
 } from './lib/copy.js';
+import { applyManifest } from './lib/patch.js';
 import { PLACEHOLDERS, replacePlaceholders } from './lib/placeholders.js';
 import { promptForValues } from './lib/prompts.js';
 
@@ -103,6 +104,7 @@ async function main() {
   });
   if (includeMemory) {
     copyAddonFiles(MEMORY_ROOT, targetDir);
+    applyManifest(join(MEMORY_ROOT, 'manifest.json'), targetDir);
   }
 
   // --- placeholder substitution ---

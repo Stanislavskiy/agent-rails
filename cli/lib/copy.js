@@ -1,5 +1,5 @@
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join, relative } from 'node:path';
+import { basename, dirname, join, relative } from 'node:path';
 
 const EXCLUDE = new Set([
   'AGENTS.local.md',
@@ -86,7 +86,10 @@ export function copyIfAbsent(src, dest) {
 }
 
 export function copyAddonFiles(sourceRoot, targetDir) {
-  cpSync(sourceRoot, targetDir, { recursive: true });
+  cpSync(sourceRoot, targetDir, {
+    recursive: true,
+    filter: (src) => basename(src) !== 'manifest.json',
+  });
 }
 
 export function isBinary(buffer) {

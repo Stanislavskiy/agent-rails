@@ -61,6 +61,37 @@ Before adding, answer:
 
 ---
 
+## Plugins
+
+`plugins/` contains optional addons that the CLI applies during `init`. Each plugin has two parts:
+
+- **New files** — placed in `plugins/<name>/` mirroring the destination structure, copied as-is. `manifest.json` is excluded from the copy.
+- **`manifest.json`** — a JSON array of patch operations applied to base `template/` files after they are copied.
+
+### Patch operations
+
+| Op | What it does |
+|---|---|
+| `insert_after_line` | Find first line containing `match`, insert `content` after it |
+| `insert_before_line` | Find first line containing `match`, insert `content` before it |
+| `append_to_line` | Find first line starting with `match`, append `content` to its end |
+| `append_to_section` | Find `##` heading equal to `section`, append `content` before the next `##` or EOF |
+| `append_to_file` | Trim trailing blank lines, then append `content` |
+
+`content` is a string (single line) or array of strings (multiple lines).
+
+### Adding a new plugin
+
+1. Create `plugins/<name>/manifest.json` with the patch operations
+2. Place any new files under `plugins/<name>/` mirroring destination paths
+3. Wire it into `cli/init.js` — add a prompt, call `copyAddonFiles` then `applyManifest`
+
+### Maintaining an existing plugin
+
+When a base `template/` file changes, check whether any patch in a plugin's `manifest.json` matches against the changed content. If a `match` string was removed or renamed, update the manifest entry. No content is duplicated — only match strings need to stay in sync.
+
+---
+
 ## Testing a change
 
 There is no automated test suite for agent behavior. Validate manually:

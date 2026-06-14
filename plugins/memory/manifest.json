@@ -1,0 +1,122 @@
+[
+  {
+    "file": "AGENTS.md",
+    "op": "insert_after_line",
+    "match": "Load ONLY the files listed for your task type. Do not load others.",
+    "content": "Also run `search_memory(task description)` at session start — category filters are listed per task type."
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_line",
+    "match": "- new-feature:",
+    "content": " · mem0: category:[pattern, constraint, integration]"
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_line",
+    "match": "- bug-fix:",
+    "content": " · mem0: category:[gotcha, resolution, constraint]"
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_line",
+    "match": "- refactor/tests/CI:",
+    "content": " · mem0: category:[pattern, constraint]"
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_section",
+    "section": "## Always-on rules",
+    "content": [
+      "- CONSULT MEMORY: At session start, run `search_memory` with your task description using the category filter for your task type. Pull full content for confirmed-confidence results.",
+      "- CAPTURE TO MEMORY: After any task that produced a new pattern, gotcha, or resolution, follow `.agents/playbooks/memory-write.md`."
+    ]
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_section",
+    "section": "## Key paths",
+    "content": "- `.agents/playbooks/memory-write.md` — memory write protocol (follow before calling add_memory)"
+  },
+  {
+    "file": ".agents/prompts/capture-learning.md",
+    "op": "insert_before_line",
+    "match": "## Constraints",
+    "content": [
+      "- **mem0** — agent-discovered pattern, gotcha, or resolution",
+      "  → Applies when: learned during task execution, scoped to specific conditions, sub-ADR formality",
+      "  → Follow `.agents/playbooks/memory-write.md` — DO NOT call add_memory directly",
+      "  → Signals: unexpected system behavior, approach that worked under specific conditions, a watch-out",
+      ""
+    ]
+  },
+  {
+    "file": ".agents/prompts/capture-learning.md",
+    "op": "append_to_section",
+    "section": "## Constraints",
+    "content": [
+      "- ADR vs memory: learning changes HOW WE BUILD → ADR; learning records WHAT WAS DISCOVERED → memory",
+      "- principles/ vs memory: applies universally to all future tasks → principle; applies under specific conditions → memory"
+    ]
+  },
+  {
+    "file": ".agents/routines/fix-bug.md",
+    "op": "insert_before_line",
+    "match": "- Trace execution path to identify root cause",
+    "content": "- Query mem0 for prior resolutions matching this symptom before investigating: `search_memory([bug description], filter={category: [gotcha, resolution, constraint]})`"
+  },
+  {
+    "file": ".agents/routines/fix-bug.md",
+    "op": "append_to_file",
+    "content": [
+      "",
+      "---",
+      "",
+      "## Step 5 — Capture Memory · act  (skip if no new learning)",
+      "Actions:",
+      "- Identify any gotcha, resolution, or constraint discovered during this task not already in memory",
+      "- Follow `.agents/playbooks/memory-write.md` for each candidate",
+      "Gate: all learnings captured or determined not memory-worthy"
+    ]
+  },
+  {
+    "file": ".agents/routines/implement-feature.md",
+    "op": "insert_before_line",
+    "match": "- Design implementation approach",
+    "content": "- Query mem0 for relevant patterns and constraints before designing: `search_memory([feature description], filter={category: [pattern, constraint, integration]})`"
+  },
+  {
+    "file": ".agents/routines/implement-feature.md",
+    "op": "append_to_file",
+    "content": [
+      "",
+      "---",
+      "",
+      "## Step 6 — Capture Memory · act  (skip if no new learning)",
+      "Actions:",
+      "- Identify any pattern, integration behavior, or constraint discovered during this task not already in memory",
+      "- Follow `.agents/playbooks/memory-write.md` for each candidate",
+      "Gate: all learnings captured or determined not memory-worthy"
+    ]
+  },
+  {
+    "file": ".agents/routines/refactor.md",
+    "op": "insert_before_line",
+    "match": "- List files to change and why",
+    "content": "- Query mem0 for patterns and constraints relevant to the target module: `search_memory([target + goal], filter={category: [pattern, constraint]})`"
+  },
+  {
+    "file": ".agents/routines/refactor.md",
+    "op": "append_to_file",
+    "content": [
+      "",
+      "---",
+      "",
+      "## Step 5 — Capture Memory · act  (skip if no new learning)",
+      "Actions:",
+      "- Identify any pattern or constraint discovered during this task not already in memory",
+      "- Follow `.agents/playbooks/memory-write.md` for each candidate",
+      "Gate: all learnings captured or determined not memory-worthy"
+    ]
+  }
+]
