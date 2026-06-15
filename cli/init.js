@@ -20,7 +20,7 @@ import { promptForValues } from './lib/prompts.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_ROOT = resolve(__dirname, '../template');
-const MEMORY_ROOT = resolve(__dirname, '../plugins/memory');
+const MEMORY_ROOT = resolve(__dirname, '../plugins/mem0');
 
 function parseArgs(argv) {
   const args = argv.slice(2);
