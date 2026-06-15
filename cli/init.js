@@ -20,7 +20,8 @@ import { promptForValues } from './lib/prompts.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_ROOT = resolve(__dirname, '../template');
-const MEMORY_ROOT = resolve(__dirname, '../plugins/mem0');
+const PLUGIN_MEM0_ROOT = resolve(__dirname, '../plugins/mem0');
+const PLUGIN_MD_MEMORY_ROOT = resolve(__dirname, '../plugins/md-memory');
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -98,13 +99,20 @@ async function main() {
   }
 
   // --- optional memory addon ---
-  const includeMemory = await confirm({
-    message: 'Include agent memory layer? (self-hosted mem0 — requires Docker)',
-    default: false,
+  const memoryChoice = await select({
+    message: 'Include agent memory layer?',
+    choices: [
+      { name: 'None', value: 'none' },
+      { name: 'File-based (markdown files — no external tools required)', value: 'md-memory' },
+      { name: 'mem0 (self-hosted vector DB — requires Docker)', value: 'mem0' },
+    ],
   });
-  if (includeMemory) {
-    copyAddonFiles(MEMORY_ROOT, targetDir);
-    applyManifest(join(MEMORY_ROOT, 'manifest.json'), targetDir);
+  if (memoryChoice === 'mem0') {
+    copyAddonFiles(PLUGIN_MEM0_ROOT, targetDir);
+    applyManifest(join(PLUGIN_MEM0_ROOT, 'manifest.json'), targetDir);
+  } else if (memoryChoice === 'md-memory') {
+    copyAddonFiles(PLUGIN_MD_MEMORY_ROOT, targetDir);
+    applyManifest(join(PLUGIN_MD_MEMORY_ROOT, 'manifest.json'), targetDir);
   }
 
   // --- placeholder substitution ---
@@ -142,9 +150,12 @@ async function main() {
   console.log('  1. Review AGENTS.md and fill in the remaining [bracketed] sections');
   console.log('  2. Fill in .agents/context/architecture.md and .agents/context/domain.md');
   console.log('  3. Commit the .agents/ directory to your repo');
-  if (includeMemory) {
-    console.log('\n  Memory layer included:');
+  if (memoryChoice === 'mem0') {
+    console.log('\n  mem0 layer included:');
     console.log('  4. Follow the Memory section in the template README to start the local stack');
+  } else if (memoryChoice === 'md-memory') {
+    console.log('\n  File-based memory included:');
+    console.log('  4. Entries are written to .agents/memory/entries/ — commit them to share across the team');
   }
   console.log();
 }

@@ -1,0 +1,145 @@
+[
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_line",
+    "match": "- new-feature:",
+    "content": " + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md` + `.agents/memory/INDEX-integration.md`"
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_line",
+    "match": "- bug-fix:",
+    "content": " + `.agents/memory/INDEX-gotcha.md` + `.agents/memory/INDEX-resolution.md` + `.agents/memory/INDEX-constraint.md`"
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_line",
+    "match": "- refactor/tests/CI:",
+    "content": " + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md`"
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_section",
+    "section": "## Always-on rules",
+    "content": [
+      "- CONSULT MEMORY: Load the memory index slices specified in the routing table for your task type. Pull individual entries by slug path when the one-liner matches your task scope.",
+      "- CAPTURE TO MEMORY: After any task that produced a new pattern, gotcha, or resolution, follow `.agents/playbooks/memory-write.md` to persist it."
+    ]
+  },
+  {
+    "file": "AGENTS.md",
+    "op": "append_to_section",
+    "section": "## Key paths",
+    "content": [
+      "- `.agents/memory/INDEX-gotcha.md` — unexpected behaviors, footguns (bug-fix tasks)",
+      "- `.agents/memory/INDEX-pattern.md` — reusable approaches that work well here (feature/refactor tasks)",
+      "- `.agents/memory/INDEX-resolution.md` — how recurring problems were solved (bug-fix tasks)",
+      "- `.agents/memory/INDEX-constraint.md` — external limits, system-imposed restrictions (all tasks)",
+      "- `.agents/memory/INDEX-integration.md` — third-party service behaviors (feature tasks)",
+      "- `.agents/memory/entries/[slug].md` — individual entries (load on demand by slug)",
+      "- `.agents/playbooks/memory-write.md` — write protocol (always follow before writing to memory)"
+    ]
+  },
+  {
+    "file": ".agents/prompts/capture-learning.md",
+    "op": "insert_before_line",
+    "match": "- **`.agents/adr/`**",
+    "content": [
+      "- **`.agents/memory/entries/[slug].md`** — agent-discovered pattern, gotcha, or resolution",
+      "  → Applies when: learned during task execution, scoped to specific conditions, sub-ADR formality",
+      "  → DO NOT write directly — follow `.agents/playbooks/memory-write.md`",
+      "  → Signals: unexpected system behavior, approach that worked in specific conditions, a watch-out",
+      ""
+    ]
+  },
+  {
+    "file": ".agents/prompts/capture-learning.md",
+    "op": "append_to_section",
+    "section": "## Constraints",
+    "content": [
+      "- ADR vs memory: learning changes HOW WE BUILD → ADR; learning records WHAT WAS DISCOVERED → memory entry",
+      "- principles/ vs memory: applies universally to all future tasks → principle; applies in specific conditions → memory entry"
+    ]
+  },
+  {
+    "file": ".agents/routines/fix-bug.md",
+    "op": "append_to_line",
+    "match": "Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/architecture.md`",
+    "content": " + `.agents/memory/INDEX-gotcha.md` + `.agents/memory/INDEX-resolution.md` + `.agents/memory/INDEX-constraint.md`"
+  },
+  {
+    "file": ".agents/routines/fix-bug.md",
+    "op": "insert_before_line",
+    "match": "- Trace execution path to identify root cause",
+    "content": "- Check memory for prior resolutions matching this symptom before investigating"
+  },
+  {
+    "file": ".agents/routines/fix-bug.md",
+    "op": "append_to_file",
+    "content": [
+      "",
+      "---",
+      "",
+      "## Step 5 — Capture Memory · act  (conditional — skip if no new learning)",
+      "Reads: `.agents/memory/INDEX-gotcha.md` + `.agents/memory/INDEX-resolution.md` + `.agents/memory/INDEX-constraint.md`",
+      "Actions:",
+      "- Identify any gotcha, resolution, or constraint from this task not already in the index",
+      "- Follow `.agents/playbooks/memory-write.md` for each candidate",
+      "Gate: all new learnings captured or determined not memory-worthy"
+    ]
+  },
+  {
+    "file": ".agents/routines/implement-feature.md",
+    "op": "append_to_line",
+    "match": "Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md` + `.agents/context/domain.md`",
+    "content": " + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md` + `.agents/memory/INDEX-integration.md`"
+  },
+  {
+    "file": ".agents/routines/implement-feature.md",
+    "op": "insert_before_line",
+    "match": "- Design implementation approach",
+    "content": "- Load relevant memory entries for the feature scope before designing"
+  },
+  {
+    "file": ".agents/routines/implement-feature.md",
+    "op": "append_to_file",
+    "content": [
+      "",
+      "---",
+      "",
+      "## Step 6 — Capture Memory · act  (conditional — skip if no new learning)",
+      "Reads: `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md` + `.agents/memory/INDEX-integration.md`",
+      "Actions:",
+      "- Identify any pattern, gotcha, or resolution from this task not already in the index",
+      "- Follow `.agents/playbooks/memory-write.md` for each candidate",
+      "Gate: all new learnings captured or determined not memory-worthy"
+    ]
+  },
+  {
+    "file": ".agents/routines/refactor.md",
+    "op": "append_to_line",
+    "match": "Reads: `AGENTS.md` + `.agents/context/principles/distilled/` + `.agents/context/principles/` + `.agents/context/architecture.md`",
+    "content": " + `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md`"
+  },
+  {
+    "file": ".agents/routines/refactor.md",
+    "op": "insert_before_line",
+    "match": "- List files to change and why",
+    "content": "- Load constraint and pattern entries relevant to the target module"
+  },
+  {
+    "file": ".agents/routines/refactor.md",
+    "op": "append_to_file",
+    "content": [
+      "",
+      "---",
+      "",
+      "## Step 5 — Capture Memory · act  (conditional — skip if no new learning)",
+      "Reads: `.agents/memory/INDEX-pattern.md` + `.agents/memory/INDEX-constraint.md`",
+      "Actions:",
+      "- Identify any pattern or constraint from this task not already in the index",
+      "- Follow `.agents/playbooks/memory-write.md` for each candidate",
+      "Gate: all new learnings captured or determined not memory-worthy"
+    ]
+  }
+]

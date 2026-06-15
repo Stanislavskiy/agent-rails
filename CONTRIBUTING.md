@@ -29,13 +29,13 @@ Files are instructions for agents, not documentation for humans. Use directives 
 
 The template contains **structure and conventions** — never project-specific content.
 
-| Belongs here | Does not belong here |
-|---|---|
-| Layer folders and their README/TEMPLATE files | Filled-in architecture.md or domain.md |
-| Prompt and routine templates with `[PLACEHOLDERS]` | Prompts written for a specific stack |
-| Generic principles that apply to any project | Project-specific rules or team conventions |
-| CI workflow skeleton with TODO comments | Wired-up CI that calls a specific runner |
-| Example ADR template | Actual ADRs about real decisions |
+| Belongs here                                       | Does not belong here                       |
+| -------------------------------------------------- | ------------------------------------------ |
+| Layer folders and their README/TEMPLATE files      | Filled-in architecture.md or domain.md     |
+| Prompt and routine templates with `[PLACEHOLDERS]` | Prompts written for a specific stack       |
+| Generic principles that apply to any project       | Project-specific rules or team conventions |
+| CI workflow skeleton with TODO comments            | Wired-up CI that calls a specific runner   |
+| Example ADR template                               | Actual ADRs about real decisions           |
 
 If content only makes sense for one project, it belongs in that project's `AGENTS.workspace.md` or `.agents/context/` — not here.
 
@@ -70,13 +70,13 @@ Before adding, answer:
 
 ### Patch operations
 
-| Op | What it does |
-|---|---|
-| `insert_after_line` | Find first line containing `match`, insert `content` after it |
-| `insert_before_line` | Find first line containing `match`, insert `content` before it |
-| `append_to_line` | Find first line starting with `match`, append `content` to its end |
-| `append_to_section` | Find `##` heading equal to `section`, append `content` before the next `##` or EOF |
-| `append_to_file` | Trim trailing blank lines, then append `content` |
+| Op                   | What it does                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------- |
+| `insert_after_line`  | Find first line containing `match`, insert `content` after it                      |
+| `insert_before_line` | Find first line containing `match`, insert `content` before it                     |
+| `append_to_line`     | Find first line starting with `match`, append `content` to its end                 |
+| `append_to_section`  | Find `##` heading equal to `section`, append `content` before the next `##` or EOF |
+| `append_to_file`     | Trim trailing blank lines, then append `content`                                   |
 
 `content` is a string (single line) or array of strings (multiple lines).
 
@@ -89,6 +89,13 @@ Before adding, answer:
 ### Maintaining an existing plugin
 
 When a base `template/` file changes, check whether any patch in a plugin's `manifest.json` matches against the changed content. If a `match` string was removed or renamed, update the manifest entry. No content is duplicated — only match strings need to stay in sync.
+
+### Available plugins
+
+| Plugin      | Directory            | Requires                 | What it adds                                                           |
+| ----------- | -------------------- | ------------------------ | ---------------------------------------------------------------------- |
+| `mem0`      | `plugins/mem0/`      | Docker (qdrant + ollama) | Vector-based memory via `search_memory` / `add_memory` MCP tools       |
+| `md-memory` | `plugins/md-memory/` | Nothing                  | File-based memory in `.agents/memory/` — entries committed to the repo |
 
 ---
 

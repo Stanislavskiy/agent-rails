@@ -12,14 +12,14 @@ Instead of giving every agent your entire codebase, this template routes agents 
 
 The `.agents/` folder has five distinct layers, each with a different role:
 
-| Layer | Answers | Written by |
-|-------|---------|------------|
-| `context/` | What to *know* — architecture, domain, development rules | Developers |
-| `playbooks/` | How to *do X* — project-specific sub-task procedures | Developers |
-| `prompts/` | What *task* to run — standalone single-session templates | Developers |
-| `routines/` | How to *orchestrate* — multi-session workflows with gates | Developers |
-| `adr/` | What was *decided* — append-only architecture record | Developers + agents |
-| `memory/` | What was *discovered* — agent-learned patterns, gotchas, resolutions | Agents (via playbook) |
+| Layer        | Answers                                                              | Written by            |
+| ------------ | -------------------------------------------------------------------- | --------------------- |
+| `context/`   | What to _know_ — architecture, domain, development rules             | Developers            |
+| `playbooks/` | How to _do X_ — project-specific sub-task procedures                 | Developers            |
+| `prompts/`   | What _task_ to run — standalone single-session templates             | Developers            |
+| `routines/`  | How to _orchestrate_ — multi-session workflows with gates            | Developers            |
+| `adr/`       | What was _decided_ — append-only architecture record                 | Developers + agents   |
+| `memory/`    | What was _discovered_ — agent-learned patterns, gotchas, resolutions | Agents (via playbook) |
 
 ### Principles and distillation
 
@@ -35,13 +35,14 @@ The `.agents/` folder has five distinct layers, each with a different role:
 **Prompts** are single-session task templates. One agent, one session, one output. Good for atomic tasks: fix a bug, review a PR, run a refactor.
 
 **Routines** are multi-session workflows. Each step runs in a fresh agent session with a deliberately narrow context ceiling. Use routines when:
+
 - The task requires a human review gate before code is written (e.g., approve the plan)
 - Different phases need different context to avoid anchoring bias (the agent that implements should not also review)
 - The task is too large to complete reliably in one session
 
 ### Playbooks
 
-Playbooks are project-specific procedures — *how we do X in this codebase*. They differ from principles (which are rules: "DO NOT call X directly") and prompts (which are full tasks). A playbook describes the steps: file locations, tooling invocations, naming conventions for a recurring sub-task like writing a test or generating a migration.
+Playbooks are project-specific procedures — _how we do X in this codebase_. They differ from principles (which are rules: "DO NOT call X directly") and prompts (which are full tasks). A playbook describes the steps: file locations, tooling invocations, naming conventions for a recurring sub-task like writing a test or generating a migration.
 
 Agents don't discover playbooks automatically. Each playbook must be wired into a routine step or a principle so it loads in the right context. See `.agents/playbooks/TEMPLATE.md` for instructions.
 
@@ -64,12 +65,14 @@ node cli/init.js <path/to/your-project>
 ```
 
 The CLI will:
+
 1. Copy all template files from `template/` into your project
 2. Walk you through filling in the identity placeholders in `AGENTS.md` (project name, stack, default branch)
 3. Merge the agent `.gitignore` entries into your existing `.gitignore` without duplicates
 4. Handle conflicts if `.agents/` already exists — backup or merge
 
 After init:
+
 - Fill in `.agents/context/architecture.md` — system topology, services, infra
 - Fill in `.agents/context/domain.md` — core entities, business rules, glossary
 - Wire up `.github/workflows/distill-principles.yml` with your agent runner (see the TODO comment inside)
@@ -81,21 +84,46 @@ After init:
 
 ## Memory
 
-The memory layer lets agents persist what they discover across sessions — patterns, gotchas, and resolutions that would otherwise be lost. It is opt-in: the CLI prompt during `init` asks whether to include it.
+The memory layer lets agents persist what they discover across sessions — patterns, gotchas, and resolutions that would otherwise be lost. It is opt-in: the CLI prompt during `init` asks which type to include.
 
-When included, the stack runs entirely on your machine. No data is sent to any external service.
+Two options are available:
 
-### Infrastructure
+|                    | File-based                                      | mem0                     |
+| ------------------ | ----------------------------------------------- | ------------------------ |
+| Storage            | `.agents/memory/entries/` (markdown, committed) | Local Qdrant vector DB   |
+| Requires           | Nothing                                         | Docker                   |
+| Shared across team | Yes — via normal git commits                    | Via shared Qdrant server |
+| Search             | By category index + slug                        | Vector similarity        |
 
-Three components, all local:
+### How agents use memory
 
-| Component | Role | Image |
-|---|---|---|
-| Qdrant | Vector store | `qdrant/qdrant` |
-| Ollama | Embeddings + LLM | `ollama/ollama` |
-| mem0 MCP | Agent interface | `npx @mem0ai/mem0-mcp` |
+Regardless of which option is chosen, agents consult and write memory automatically as part of their routines:
 
-### Setup
+- **Before investigating a bug** — queries for prior resolutions and known gotchas
+- **Before designing a feature** — queries for relevant patterns and constraints
+- **After completing a task** — captures any new learning via `.agents/playbooks/memory-write.md`
+
+To capture a learning manually mid-task, use `.agents/prompts/capture-learning.md` — it routes to memory when the note is scoped to specific conditions rather than a universal rule.
+
+### File-based memory
+
+Entries live in `.agents/memory/entries/` as markdown files and are committed to the repo. Five category indices (gotcha, pattern, resolution, constraint, integration) let agents load only the slice relevant to their task type.
+
+Agents write entries by following `.agents/playbooks/memory-write.md`, which handles slug derivation, deduplication scanning, and cross-conflict checks. No external tools or infrastructure required.
+
+### mem0 (self-hosted vector DB)
+
+The entire stack runs on your machine. No data is sent to any external service.
+
+#### Infrastructure
+
+| Component | Role             | Image                  |
+| --------- | ---------------- | ---------------------- |
+| Qdrant    | Vector store     | `qdrant/qdrant`        |
+| Ollama    | Embeddings + LLM | `ollama/ollama`        |
+| mem0 MCP  | Agent interface  | `npx @mem0ai/mem0-mcp` |
+
+#### Setup
 
 **1. Start the infrastructure**
 
@@ -143,19 +171,9 @@ curl http://localhost:11434/api/tags      # Ollama — lists pulled models
 
 Once running, your agent will have `add_memory` and `search_memory` tools available. The `AGENTS.md` routing table and routines reference these automatically — no further configuration needed.
 
-### How agents use memory
+#### Sharing across the team
 
-Agents consult and write memory automatically as part of their routines:
-
-- **Before investigating a bug** — queries for prior resolutions and known gotchas
-- **Before designing a feature** — queries for relevant patterns and constraints
-- **After completing a task** — captures any new learning via `.agents/playbooks/memory-write.md`
-
-To capture a learning manually mid-task, use `.agents/prompts/capture-learning.md` — it routes to memory when the note is scoped to specific conditions rather than a universal rule.
-
-### Sharing memory across the team
-
-Memory is stored in the local Qdrant instance. To share state across developers, point all team members' `QDRANT_URL` at a shared Qdrant server on your internal network. Ollama continues to run locally on each machine — only the vector store is shared.
+To share mem0 state across developers, point all team members' `QDRANT_URL` at a shared Qdrant server on your internal network. Ollama continues to run locally on each machine — only the vector store is shared.
 
 ```sh
 # On the shared server
@@ -203,12 +221,12 @@ State passes between sessions via `.agents/scratch/` (gitignored). Every step ha
 
 ## Maintain
 
-| When | What to do |
-|------|------------|
-| Behavior or API changes | Update `docs/` — distillation runs automatically on push |
-| Team convention changes | Edit `.agents/context/principles/` directly |
-| Recurring sub-task with project-specific steps | Add a playbook from `.agents/playbooks/TEMPLATE.md` |
-| Introducing a new pattern or library | Create an ADR from `.agents/adr/YYYYMMDD-template.md` |
-| Workspace context changes | Update `AGENTS.workspace.md` |
+| When                                           | What to do                                               |
+| ---------------------------------------------- | -------------------------------------------------------- |
+| Behavior or API changes                        | Update `docs/` — distillation runs automatically on push |
+| Team convention changes                        | Edit `.agents/context/principles/` directly              |
+| Recurring sub-task with project-specific steps | Add a playbook from `.agents/playbooks/TEMPLATE.md`      |
+| Introducing a new pattern or library           | Create an ADR from `.agents/adr/YYYYMMDD-template.md`    |
+| Workspace context changes                      | Update `AGENTS.workspace.md`                             |
 
 > `principles/distilled/` is read-only — never edit it manually. It is regenerated from `docs/` by the distillation pipeline.
